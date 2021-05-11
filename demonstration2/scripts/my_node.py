@@ -28,6 +28,11 @@ class my_node:
         self.publisher_move_base_simple_goal = rospy.Publisher('move_base_simple/goal/', PoseStamped, queue_size=1)
         self.publisher_map = rospy.Publisher('/ecte477/map', OccupancyGrid, queue_size=1)
         self.publisher_path = rospy.Publisher('/ecte477/path', Path, queue_size=1)
+        #load the beacon file
+        self.beacons = rospy.get_param("beacons")
+        #publish the beacon
+        self.beaconsPub = rospy.Publisher('/ecte477/beacons')
+
         # Object for storing path
         self.path = Path()
         self.path.header.frame_id = "odom"
@@ -38,6 +43,14 @@ class my_node:
         start_explore_lite = rospy.ServiceProxy('explore/explore_service', SetBool)
         resp  = start_explore_lite(True)
 
+        for x in self.beacons:
+            id = x["id"]
+            top_color = x["top"]
+            bottom_color = x["bottom"]
+            print("Beacon number {} is {} on the top and {} on the bottomr".format(id,top_color, bottom_color))
+            #may-required/ may not we need to check
+            if top_color == "blue" and bottom_color == "red":
+                print("The blue-red beacon is found")
 		
     # Simply repeact the map data to the correct topic
     def callback_map(self, data):
