@@ -18,6 +18,8 @@ from nav_msgs.msg import OccupancyGrid, Odometry, Path
 from geometry_msgs.msg import PoseStamped
 from visualization_msgs.msg import MarkerArray
 from std_srvs.srv import SetBool
+from demonstration2.msg import custom
+from datetime import datetime
 
 class my_node:
     def __init__(self):
@@ -31,8 +33,8 @@ class my_node:
         #load the beacon file
         self.beacons = rospy.get_param("beacons")
         #publish the beacon
-        self.beaconsPub = rospy.Publisher('/ecte477/beacons')
-
+        self.beaconsPub = rospy.Publisher('/ecte477/beacons',custom, queue_size = 10)
+        msg = custom()
         # Object for storing path
         self.path = Path()
         self.path.header.frame_id = "odom"
@@ -42,6 +44,8 @@ class my_node:
         rospy.wait_for_service('explore/explore_service')
         start_explore_lite = rospy.ServiceProxy('explore/explore_service', SetBool)
         resp  = start_explore_lite(True)
+        test = "dfsfsdASDSAD"
+
 
         for x in self.beacons:
             id = x["id"]
@@ -49,6 +53,14 @@ class my_node:
             bottom_color = x["bottom"]
             print("Beacon number {} is {} on the top and {} on the bottomr".format(id,top_color, bottom_color))
             #may-required/ may not we need to check
+
+            custom.header.data = id + " " + rospy.Time.now()
+            custom.header.frame_id = 'map'
+            custom.top.data = top_color
+            custom.bottom.data = bottom_color
+            # add the marker value here for the position
+            custom.position.data = "null"
+            self.beaconsPub.publish(custom)
             if top_color == "blue" and bottom_color == "red":
                 print("The blue-red beacon is found")
 		
