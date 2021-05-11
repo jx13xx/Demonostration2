@@ -1,13 +1,12 @@
 <launch>
     <!-- Arguments -->
-    <arg name="auto_start" default="false" />    
+    <arg name="auto_start" default="true" />
     <arg name="open_rviz" default="false" />    
 
     <!-- SLAM -->
     <include file="$(find turtlebot3_slam)/launch/turtlebot3_slam.launch">
         <arg name="open_rviz" value="$(arg open_rviz)" />
     </include>
-
     <!-- Navigation -->
     <include file="$(find turtlebot3_navigation)/launch/move_base.launch" />
     <include file="$(find turtlebot3_navigation)/launch/amcl.launch" />
