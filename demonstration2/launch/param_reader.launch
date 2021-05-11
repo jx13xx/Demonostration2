@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="demonstration2" type="param_reader.py" name="param_reader" output="screen">
+    <rosparam file="$(find demonstration2)/param/beacons.yaml" command="load" />
+    </node>
+</launch>
